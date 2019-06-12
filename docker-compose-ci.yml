@@ -1,7 +1,7 @@
 version: '3'
 services:
   jenkins:
-    build: .
+    image: jenkinsci/blueocean
     container_name: jenkins
     user: root
     networks:
@@ -11,7 +11,6 @@ services:
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home:/home
     links:
       - sonarqube
   sonarqube:
@@ -47,7 +46,7 @@ services:
       - ci
     ports:
       - 8122:8081
-      - 8123:8081
+      - 8123:8123
     volumes:
       - nexus-data:/nexus-data
 

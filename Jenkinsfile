@@ -1,56 +1,52 @@
-node {
-    git '/home/orube/Projetos/spring-petclinic/'
-}
-
 pipeline {
-        environment {
-            registry = "http://nexus:8123"
-            registryCredential = 'nexus'
-        }
-        
-        tools {
-            maven "maven"
-        }
+ environment {
+  registry = "http://localhost:8123"
+  registryCredential = 'nexus'
+ }
 
-        agent any
-        
-        stages {
-            
-            stage('Build') { 
-                steps {
-                    sh 'mvn clean package -DskipTests=true' 
-                }
-            }
+ tools {
+  maven "maven"
+ }
 
-            stage('Test') {
-                steps {
-                    sh 'mvn test'
-                }
-                post {
-                    always {
-                        junit 'target/surefire-reports/*.xml'
-                    }
-                }
-            }
+ agent any
 
-            stage('Sonarqube') {
-                steps {
-                    withSonarQubeEnv('sonarqube') {
-                        sh 'mvn sonar:sonar'
-                    }
-                }
-            }
-            
-            stage('Delivery') {
-                steps {
-                    script {
-                        def image = docker.build("devops/petclinic")
-                        docker.withRegistry(registry, registryCredential) {
-                            image.push("${env.BUILD_NUMBER}")
-                            image.push("latest")
-                        }
-                    }
-                }
-            }
-        }
+ stages {
+
+  stage('Build') {
+   steps {
+    sh 'mvn clean compile'
+   }
+  }
+
+  stage('Test') {
+   steps {
+    sh 'mvn test'
+   }
+   post {
+    always {
+     junit 'target/surefire-reports/*.xml'
     }
+   }
+  }
+
+  stage('Sonarqube') {
+   steps {
+    withSonarQubeEnv('sonarqube') {
+     sh 'mvn sonar:sonar'
+    }
+   }
+  }
+
+  stage('Delivery') {
+   steps {
+    script {
+     def image = docker.build("devops/petclinic")
+     docker.withRegistry(registry, registryCredential) {
+      image.push("${env.BUILD_NUMBER}")
+      image.push("latest")
+     }
+    }
+   }
+  }
+ }
+}
