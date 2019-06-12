@@ -49,6 +49,16 @@ services:
       - 8123:8123
     volumes:
       - nexus-data:/nexus-data
+  mysql:
+    image: mysql:5.7
+    container_name: cd_db
+    networks:
+      - ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=petclinic
+      - MYSQL_DATABASE=petclinic
+    volumes:
+      - mysql_data:/var/lib/mysql
 
 volumes:
   jenkins_data:
@@ -56,6 +66,7 @@ volumes:
   sonarqube_conf:
   sonarqube_plugins:
   nexus-data:
+  mysql_data:
 
 networks:
   ci:
