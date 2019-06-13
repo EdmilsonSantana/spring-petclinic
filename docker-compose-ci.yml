@@ -62,6 +62,7 @@ services:
 
 volumes:
   jenkins_data:
+    external: true
   postgres_data:
   sonarqube_conf:
   sonarqube_plugins:
