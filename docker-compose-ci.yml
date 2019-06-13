@@ -48,7 +48,7 @@ services:
       - 8122:8081
       - 8123:8123
     volumes:
-      - nexus-data:/nexus-data
+      - nexus_data:/nexus-data
   mysql:
     image: mysql:5.7
     container_name: cd_db
@@ -64,9 +64,13 @@ volumes:
   jenkins_data:
     external: true
   postgres_data:
+    external: true
   sonarqube_conf:
+    external: true
   sonarqube_plugins:
-  nexus-data:
+    external: true
+  nexus_data:
+    external: true
   mysql_data:
 
 networks:
