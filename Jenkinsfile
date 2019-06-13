@@ -14,7 +14,7 @@ pipeline {
 
   stage('Build') {
    steps {
-    sh 'mvn clean compile'
+    sh 'mvn -Dmaven.test.skip=true clean package'
    }
   }
 
@@ -40,7 +40,7 @@ pipeline {
   stage('Delivery') {
    steps {
     script {
-     def image = docker.build("devops/petclinic")
+     def image = docker.build("devops/petclinic", "./Dockerfile.ci")
      docker.withRegistry(registry, registryCredential) {
       image.push("${env.BUILD_NUMBER}")
       image.push("latest")
