@@ -40,7 +40,7 @@ pipeline {
   stage('Delivery') {
    steps {
     script {
-     def image = docker.build("devops/petclinic", "./Dockerfile.ci")
+     def image = docker.build("devops/petclinic", "-f Dockerfile.ci .")
      docker.withRegistry(registry, registryCredential) {
       image.push("${env.BUILD_NUMBER}")
       image.push("latest")
